@@ -34,7 +34,7 @@ class VLRDataCollector:
                 return []
                 
         except requests.RequestException as e:
-            print(f"✗ Error: {e}")
+            print(f"Error: {e}")
             return []
     
     def get_team_rankings(self, region='na'):
