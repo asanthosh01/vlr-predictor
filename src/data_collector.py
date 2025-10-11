@@ -27,10 +27,10 @@ class VLRDataCollector:
             
             if data.get('data', {}).get('status') == 200:
                 matches = data['data']['segments']
-                print(f"✓ Fetched {len(matches)} matches")
+                print(f"Fetched {len(matches)} matches")
                 return matches
             else:
-                print("✗ Failed to fetch data")
+                print("Failed to fetch data")
                 return []
                 
         except requests.RequestException as e:
@@ -51,14 +51,14 @@ class VLRDataCollector:
             
             if data.get('status') == 200:
                 rankings = data['data']
-                print(f"✓ Fetched {len(rankings)} teams")
+                print(f"Fetched {len(rankings)} teams")
                 return rankings
             else:
                 print("✗ Failed to fetch rankings")
                 return []
                 
         except requests.RequestException as e:
-            print(f"✗ Error: {e}")
+            print(f"Error: {e}")
             return []
     
     def get_player_stats(self, region='na', timespan='90'):
@@ -77,14 +77,14 @@ class VLRDataCollector:
             
             if data.get('data', {}).get('status') == 200:
                 stats = data['data']['segments']
-                print(f"✓ Fetched stats for {len(stats)} players")
+                print(f"Fetched stats for {len(stats)} players")
                 return stats
             else:
-                print("✗ Failed to fetch stats")
+                print("Failed to fetch stats")
                 return []
                 
         except requests.RequestException as e:
-            print(f"✗ Error: {e}")
+            print(f"Error: {e}")
             return []
     
     def save_to_csv(self, data, filename):
@@ -98,7 +98,7 @@ class VLRDataCollector:
         df = pd.DataFrame(data)
         filepath = f"data/raw/{filename}"
         df.to_csv(filepath, index=False)
-        print(f"✓ Saved to {filepath}")
+        print(f"Saved to {filepath}")
         
         return df
 
@@ -132,5 +132,5 @@ if __name__ == "__main__":
         collector.save_to_csv(stats, 'player_stats_na_90d.csv')
     
     print("\n" + "=" * 60)
-    print("✓ All tests complete! Check data/raw/ folder for CSVs")
+    print("All tests complete! Check data/raw/ folder for CSVs")
     print("=" * 60)
