@@ -54,7 +54,7 @@ class VLRDataCollector:
                 print(f"Fetched {len(rankings)} teams")
                 return rankings
             else:
-                print("✗ Failed to fetch rankings")
+                print("Failed to fetch rankings")
                 return []
                 
         except requests.RequestException as e:
@@ -96,7 +96,7 @@ class VLRDataCollector:
             return
         
         df = pd.DataFrame(data)
-        filepath = f"data/raw/{filename}"
+        filepath = f" data/raw/{filename}"
         df.to_csv(filepath, index=False)
         print(f"Saved to {filepath}")
         
