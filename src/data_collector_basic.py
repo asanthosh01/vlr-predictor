@@ -65,8 +65,8 @@ class VLRDataCollector:
         """
         Fetch player statistics
         """
-        print(f"Fetching player stats ({region.upper()}, last {timespan} days)...")
-
+        print(f"Fetching player stats for {region.upper()} over last {timespan} days...")
+        
         try:
             response = requests.get(
                 f"{self.base_url}/stats?region={region}&timespan={timespan}"
@@ -96,7 +96,7 @@ class VLRDataCollector:
             return
         
         df = pd.DataFrame(data)
-        filepath = f" data/raw/{filename}"
+        filepath = f"data/raw/{filename}"
         df.to_csv(filepath, index=False)
         print(f"Saved to {filepath}")
         
@@ -132,5 +132,5 @@ if __name__ == "__main__":
         collector.save_to_csv(stats, 'player_stats_na_90d.csv')
     
     print("\n" + "=" * 60)
-    print("All tests complete! Check data/raw/ folder for CSVs")
+    print("✓ All tests complete! Check data/raw/ folder for CSVs")
     print("=" * 60)
