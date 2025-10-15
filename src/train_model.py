@@ -16,7 +16,7 @@ class MatchPredictor:
         self.model = None
         self.feature_names = None
         
-    def load_data(self, filepath='data/processed/training_data.csv'):
+    def load_data(self, filepath='data/processed/training_data_full.csv'):
         """Load processed features"""
         df = pd.read_csv(filepath)
         
