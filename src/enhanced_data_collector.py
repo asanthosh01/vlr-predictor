@@ -221,10 +221,6 @@ class EnhancedVLRCollector:
         print(f"  • {len(matches) if matches else 0} matches")
         print(f"  • {len(rankings) if rankings else 0} VCT teams across {len(self.vct_regions)} regions")
         print(f"  • {len(players) if players else 0} players")
-        print("\n💡 Recommendations:")
-        print("  1. Filter matches to VCT-only (exclude GC) for more accurate VCT predictions")
-        print("  2. OR build separate models: one for VCT, one for Game Changers")
-        print("  3. Run this script daily to accumulate 500+ matches over time")
         print("=" * 70)
 
 if __name__ == "__main__":
