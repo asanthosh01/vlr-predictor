@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VLR Match Predictor</title>
+    <title>VLR Match Predictor V2</title>
     <style>
         * {
             margin: 0;
@@ -26,15 +26,23 @@
             border-radius: 20px;
             box-shadow: 0 20px 60px rgba(0,0,0,0.3);
             padding: 40px;
-            max-width: 800px;
+            max-width: 900px;
             width: 100%;
         }
         
         h1 {
             text-align: center;
             color: #2d3748;
-            margin-bottom: 10px;
+            margin-bottom: 5px;
             font-size: 2.5em;
+        }
+        
+        .version-badge {
+            text-align: center;
+            color: #48bb78;
+            font-weight: 600;
+            margin-bottom: 5px;
+            font-size: 0.9em;
         }
         
         .subtitle {
@@ -158,6 +166,19 @@
             font-size: 0.9em;
         }
         
+        .h2h-info {
+            text-align: center;
+            margin: 15px 0;
+            padding: 12px;
+            background: white;
+            border-radius: 8px;
+            border: 2px solid #e2e8f0;
+        }
+        
+        .h2h-info strong {
+            color: #4a5568;
+        }
+        
         .teams-comparison {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -208,6 +229,25 @@
             font-weight: 600;
         }
         
+        .recent-form {
+            display: inline-block;
+            padding: 4px 8px;
+            background: #edf2f7;
+            border-radius: 4px;
+            font-weight: 600;
+            margin-left: 5px;
+        }
+        
+        .recent-form.good {
+            background: #c6f6d5;
+            color: #22543d;
+        }
+        
+        .recent-form.bad {
+            background: #fed7d7;
+            color: #742a2a;
+        }
+        
         .warning {
             margin-top: 15px;
             padding: 10px;
@@ -218,24 +258,30 @@
             font-size: 0.85em;
         }
         
-        .loading {
-            text-align: center;
-            padding: 20px;
-            color: #718096;
-        }
-        
         .footer {
             margin-top: 30px;
             text-align: center;
             color: #a0aec0;
             font-size: 0.85em;
         }
+        
+        .features-badge {
+            display: inline-block;
+            background: #e6fffa;
+            color: #234e52;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.75em;
+            font-weight: 600;
+            margin-left: 8px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>⚔️ VLR Match Predictor</h1>
-        <p class="subtitle">Predict Valorant professional match outcomes using machine learning</p>
+        <div class="version-badge">V2 Model <span class="features-badge">71.7% Accuracy</span></div>
+        <p class="subtitle">Advanced ML with Recent Form & Head-to-Head Analysis</p>
         
         <div class="teams-container">
             <div class="team-select">
@@ -269,6 +315,10 @@
                 <div class="confidence" id="confidence"></div>
             </div>
             
+            <div id="h2h-section" class="h2h-info" style="display: none;">
+                <strong>Head-to-Head:</strong> <span id="h2h-text"></span>
+            </div>
+            
             <div class="teams-comparison">
                 <div class="team-card" id="team1-card">
                     <div class="team-name" id="team1-name"></div>
@@ -279,8 +329,12 @@
                             <span id="team1-rank"></span>
                         </div>
                         <div class="stat-row">
-                            <span class="stat-label">Win Rate:</span>
+                            <span class="stat-label">Overall Win Rate:</span>
                             <span id="team1-winrate"></span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-label">Recent Form (L5):</span>
+                            <span id="team1-form"></span>
                         </div>
                         <div class="stat-row">
                             <span class="stat-label">Total Games:</span>
@@ -298,8 +352,12 @@
                             <span id="team2-rank"></span>
                         </div>
                         <div class="stat-row">
-                            <span class="stat-label">Win Rate:</span>
+                            <span class="stat-label">Overall Win Rate:</span>
                             <span id="team2-winrate"></span>
+                        </div>
+                        <div class="stat-row">
+                            <span class="stat-label">Recent Form (L5):</span>
+                            <span id="team2-form"></span>
                         </div>
                         <div class="stat-row">
                             <span class="stat-label">Total Games:</span>
@@ -313,7 +371,7 @@
         </div>
         
         <div class="footer">
-            Model Accuracy: ~59-68% | Trained on 422 VCT matches | Built with XGBoost & Flask
+            Model V2: 71.7% CV Accuracy | 21 Features | Recent Form + H2H | Trained on 516 matches
         </div>
     </div>
     
@@ -336,7 +394,7 @@
             
             // Show loading
             predictBtn.disabled = true;
-            predictBtn.textContent = 'Predicting...';
+            predictBtn.textContent = 'Analyzing...';
             resultsDiv.classList.remove('show');
             
             try {
@@ -363,11 +421,30 @@
             }
         }
         
+        function getFormClass(formStr) {
+            if (formStr === 'N/A') return '';
+            const winRate = parseInt(formStr);
+            if (winRate >= 60) return 'good';
+            if (winRate <= 40) return 'bad';
+            return '';
+        }
+        
         function displayResults(data) {
             // Update winner
             const winnerName = data.prediction === 'team1' ? data.team1.name : data.team2.name;
             document.getElementById('winner').textContent = `${winnerName} predicted to win`;
             document.getElementById('confidence').textContent = `${data.confidence.toFixed(1)}% confidence`;
+            
+            // Update Head-to-Head
+            const h2hSection = document.getElementById('h2h-section');
+            const h2hText = document.getElementById('h2h-text');
+            if (data.head_to_head.matches > 0) {
+                h2hText.textContent = `${data.team1.name} ${data.head_to_head.team1_wins} - ${data.head_to_head.team2_wins} ${data.team2.name} (${data.head_to_head.matches} matches)`;
+                h2hSection.style.display = 'block';
+            } else {
+                h2hText.textContent = 'No previous matches';
+                h2hSection.style.display = 'block';
+            }
             
             // Update Team 1
             document.getElementById('team1-name').textContent = data.team1.name;
@@ -376,12 +453,18 @@
             document.getElementById('team1-winrate').textContent = data.team1.win_rate;
             document.getElementById('team1-games').textContent = data.team1.total_games;
             
+            const form1 = document.getElementById('team1-form');
+            form1.innerHTML = `${data.team1.recent_form} <span class="recent-form ${getFormClass(data.team1.recent_win_rate)}">${data.team1.recent_win_rate}</span>`;
+            
             // Update Team 2
             document.getElementById('team2-name').textContent = data.team2.name;
             document.getElementById('team2-prob').textContent = `${data.team2.win_probability.toFixed(1)}%`;
             document.getElementById('team2-rank').textContent = data.team2.rank === 999 ? 'Unranked' : `#${data.team2.rank}`;
             document.getElementById('team2-winrate').textContent = data.team2.win_rate;
             document.getElementById('team2-games').textContent = data.team2.total_games;
+            
+            const form2 = document.getElementById('team2-form');
+            form2.innerHTML = `${data.team2.recent_form} <span class="recent-form ${getFormClass(data.team2.recent_win_rate)}">${data.team2.recent_win_rate}</span>`;
             
             // Highlight winner
             const team1Card = document.getElementById('team1-card');
