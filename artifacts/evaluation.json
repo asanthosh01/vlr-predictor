@@ -1,0 +1,148 @@
+{
+  "schema_version": 1,
+  "evaluated_at": "2026-10-05T22:38:19.799973+00:00",
+  "data_sha256": "c6e690568f71ffa73a0a13c4cada6c81fcd2ae5b6f3b12df9ba4bf9617ee8d57",
+  "matches": 2983,
+  "features": [
+    "elo_difference",
+    "win_rate_difference",
+    "experience_difference",
+    "recent_form_difference",
+    "h2h_win_rate",
+    "h2h_matches",
+    "team1_matches",
+    "team2_matches"
+  ],
+  "method": "60/20/20 chronological split by date; fixed hyperparameters; no tuning on test",
+  "history_policy": "Earlier dates only. Earlier validation/test outcomes update history for later matches; model stays frozen.",
+  "probabilities": "Raw XGBoost probabilities, not calibrated",
+  "splits": {
+    "train": {
+      "start": "2025-10-25",
+      "end": "2026-05-25",
+      "model": {
+        "n": 2067,
+        "accuracy": 0.6632801161103048,
+        "accuracy_95ci_wilson": [
+          0.6426202257082579,
+          0.6833342075038237
+        ],
+        "balanced_accuracy": 0.6418053777208708,
+        "brier_score": 0.21237237751483917,
+        "roc_auc": 0.7208010705437575
+      },
+      "majority_baseline": {
+        "n": 2067,
+        "accuracy": 0.5534591194968553,
+        "accuracy_95ci_wilson": [
+          0.5319477783259902,
+          0.5747721175849284
+        ],
+        "balanced_accuracy": 0.5,
+        "brier_score": 0.24714212254262094,
+        "roc_auc": 0.5
+      },
+      "elo_baseline": {
+        "n": 2067,
+        "accuracy": 0.5820029027576198,
+        "accuracy_95ci_wilson": [
+          0.5606064530851861,
+          0.6030951067057705
+        ],
+        "balanced_accuracy": 0.5710996749729145,
+        "brier_score": 0.24069822422807916,
+        "roc_auc": 0.6096573388691482
+      }
+    },
+    "validation": {
+      "start": "2026-05-26",
+      "end": "2026-07-27",
+      "model": {
+        "n": 576,
+        "accuracy": 0.6180555555555556,
+        "accuracy_95ci_wilson": [
+          0.5777185186633298,
+          0.6568282955010905
+        ],
+        "balanced_accuracy": 0.6041869522882182,
+        "brier_score": 0.2378990352153778,
+        "roc_auc": 0.6226022395326194
+      },
+      "majority_baseline": {
+        "n": 576,
+        "accuracy": 0.5486111111111112,
+        "accuracy_95ci_wilson": [
+          0.5077827246930658,
+          0.5887953752569896
+        ],
+        "balanced_accuracy": 0.5,
+        "brier_score": 0.2476604630618514,
+        "roc_auc": 0.5
+      },
+      "elo_baseline": {
+        "n": 576,
+        "accuracy": 0.609375,
+        "accuracy_95ci_wilson": [
+          0.5689315724191495,
+          0.6483691524684749
+        ],
+        "balanced_accuracy": 0.6020691333982473,
+        "brier_score": 0.23569042478901508,
+        "roc_auc": 0.6334165043816942
+      }
+    },
+    "test": {
+      "start": "2026-07-28",
+      "end": "2026-10-04",
+      "model": {
+        "n": 340,
+        "accuracy": 0.5411764705882353,
+        "accuracy_95ci_wilson": [
+          0.48804370591340135,
+          0.5933891399086283
+        ],
+        "balanced_accuracy": 0.5346904860822601,
+        "brier_score": 0.2508426904678345,
+        "roc_auc": 0.6161715828832572
+      },
+      "majority_baseline": {
+        "n": 340,
+        "accuracy": 0.5117647058823529,
+        "accuracy_95ci_wilson": [
+          0.4587975039233494,
+          0.5644690234543732
+        ],
+        "balanced_accuracy": 0.5,
+        "brier_score": 0.2516000158221589,
+        "roc_auc": 0.5
+      },
+      "elo_baseline": {
+        "n": 340,
+        "accuracy": 0.5764705882352941,
+        "accuracy_95ci_wilson": [
+          0.5233807656210587,
+          0.6278516623341392
+        ],
+        "balanced_accuracy": 0.5760974934219637,
+        "brier_score": 0.2431057936251708,
+        "roc_auc": 0.6058371416701287
+      }
+    }
+  },
+  "feature_importance": {
+    "elo_difference": 0.14110350608825684,
+    "win_rate_difference": 0.17826174199581146,
+    "experience_difference": 0.13746950030326843,
+    "recent_form_difference": 0.13713549077510834,
+    "h2h_win_rate": 0.12783168256282806,
+    "h2h_matches": 0.07168528437614441,
+    "team1_matches": 0.09775788336992264,
+    "team2_matches": 0.10875490307807922
+  },
+  "runtime": {
+    "numpy": "2.3.5",
+    "pandas": "2.2.3",
+    "scikit-learn": "1.8.0",
+    "xgboost": "3.4.1"
+  }
+}
