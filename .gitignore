@@ -1,31 +1,13 @@
-cat > .gitignore << 'EOF'
-# Virtual environment
+.venv/
 venv/
 env/
-
-# Python cache
 __pycache__/
 *.py[cod]
-*$py.class
-*.pyc
-
-# Data files
-data/raw/
-*.csv
-*.json
-
-# Model files
-models/*.pkl
-models/*.joblib
-
-# Jupyter notebooks checkpoints
+.pytest_cache/
 .ipynb_checkpoints/
-
-# Environment variables
 .env
-
-# IDE
 .vscode/
 .idea/
 .DS_Store
-EOF
+models/*.joblib
+models/*.pkl
